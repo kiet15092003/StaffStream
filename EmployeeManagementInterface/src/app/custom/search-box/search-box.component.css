@@ -1,0 +1,19 @@
+.search-bar-container{
+    padding: 0px 0px 0px 8px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    border: 1px solid rgb(195, 195, 198);
+    > input {
+        font-size: 1.0rem;
+        outline: none;
+        border: none;
+        background: inherit;
+    }
+}
+
+.custom-flat-button {
+    border-radius: 8px;
+    margin: 10px;
+}

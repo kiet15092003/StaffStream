@@ -1,0 +1,21 @@
+.projects-container {
+    padding: 16px;
+    max-height: 500px; /* Set a maximum height for the container */
+    overflow-y: auto;  /* Enable vertical scrolling */
+  }
+  
+  .project-item {
+    margin-bottom: 16px;
+    padding: 16px;
+  }
+  
+  .project-name {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .custom-mat-chip {
+    border: none !important;
+    background-color: rgb(68, 173, 248) !important;
+    color: white !important;
+  }

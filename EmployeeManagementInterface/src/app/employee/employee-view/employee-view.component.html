@@ -1,0 +1,152 @@
+<p style="font-size: 24px; font-weight: bold;">Employee details</p>
+<div style="display: flex; gap: 20px; margin-bottom: 40px;">
+    <div style="flex-grow: 3; position: sticky; top: 0; align-self: start;">
+        <mat-card>
+            <mat-card-content style="display: flex; flex-direction: column; align-items: center;">
+                <div style="display: flex; width: 100%; position: relative;">
+                    <div style="flex-grow: 3; display: flex; flex-direction: column; position: relative;">
+                        <div class="button-container">
+                            <button mat-fab class="fab-button" style="margin-bottom: 10px;">
+                                <mat-icon>transgender</mat-icon>
+                            </button>
+                            <div class="button-text">{{empDisplay.gender}}</div>
+                        </div>
+                        <div class="button-container">
+                            <button mat-fab class="fab-button" style="margin-bottom: 10px;">
+                                <mat-icon>calendar_today</mat-icon>
+                            </button>
+                            <div class="button-text">{{empDisplay.hireDate | date: 'yyyy-MM-dd'}}</div>
+                        </div>
+                        <div class="button-container">
+                            <button mat-fab class="fab-button" style="margin-bottom: 10px;">
+                                <mat-icon>favorite</mat-icon>
+                            </button>
+                            <div class="button-text">
+                                {{empDisplay.isMarried === 1 ? 'Married' : 'Not Married'}}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="flex-grow: 6; display: flex; flex-direction: column; align-items: center;">
+                        <img [src]="
+                        empDisplay.image ? 'https://localhost:7220/api/Employee/image/' + empDisplay.image
+                        : 'https://w7.pngwing.com/pngs/922/214/png-transparent-computer-icons-avatar-businessperson-interior-design-services-corporae-building-company-heroes-thumbnail.png'"
+                            style="margin-bottom: 10px; width: 150px; height: 150px;">
+                        <p style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                            {{empDisplay.firstName + " " + empDisplay.lastName}}
+                        </p>
+                        <button mat-fab extended style="margin-bottom: 16px;">
+                            <mat-icon>work</mat-icon>
+                            {{empDisplay.designation.designationName}}
+                        </button>
+                    </div>
+                    <div style="flex-grow: 3; display: flex; flex-direction: column; align-items: center; width: 65px;">
+                        <button mat-raised-button style="margin-bottom: 10px;" (click)="onClickEditButton()">
+                            <mat-icon>edit</mat-icon>
+                            Edit
+                        </button>
+                        <button mat-raised-button color="warn" (click)="onClickDeleteButton()">
+                            <mat-icon>delete</mat-icon>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                <mat-card style="background-color: rgb(215, 235, 249); width: 100%; margin-bottom: 16px;">
+                    <mat-card-content>
+                        <p style="font-size: 13px; margin-bottom: 0px;">Department</p>
+                        <p style="margin: 0;">{{empDisplay.department.departmentName}}</p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card style="background-color: rgb(215, 235, 249); width: 100%; margin-bottom: 16px;">
+                    <mat-card-content>
+                        <p style="font-size: 13px; margin-bottom: 0px;">Salary</p>
+                        <p style="margin: 0;">{{empDisplay.salary}} USD</p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card style="background-color: rgb(215, 235, 249); width: 100%;">
+                    <mat-card-content>
+                        <p style="font-size: 13px; margin-bottom: 0px;">Email</p>
+                        <p style="margin: 0;">{{empDisplay.email}}</p>
+                    </mat-card-content>
+                </mat-card>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div style="flex-grow: 9; max-width: 850px; display: flex; flex-direction: column; gap: 20px;">
+        <mat-card>
+            <mat-card-content>
+                <p style="font-size: 24px; font-weight: bold;">Projects in progress</p>    
+                <ng-container *ngIf="listAllProject().length; else noProjects">
+                    <mat-card *ngFor="let project of listAllProject()" appearance="outlined" class="project-item"
+                        style="margin-bottom: 20px; padding: 15px;">
+                        <div style="display: flex;">
+                            <div>
+                                <img style="border-radius: 10px; width: 350px; height: auto;"
+                                    [src]="'https://localhost:7220/api/Project/image/' + project.image" />
+                            </div>
+                            <div
+                                style="margin-left: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                        <div style="max-width: 60%;">
+                                            <p style="font-weight: bold; font-size: 24px;" class="project-name">{{
+                                                project.projectName }}</p>
+                                        </div>
+
+                                    </div>
+                                    <div class="project-tech" style="display: flex; margin-bottom: 10px;">
+                                        <span *ngFor="let tech of project.listTech; let i = index">
+                                            <div style="background: rgb(27, 130, 203); color: white; padding: 8px;
+                                                    margin-right: 10px; border-radius: 5px;">
+                                                {{ tech }}
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <p class="project-description" style="display: -webkit-box;
+                                    -webkit-box-orient: vertical;
+                                    -webkit-line-clamp: 4;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;">{{ project.description }}</p>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <div style="display: flex; align-items: center; margin-left: 10px;">
+                                            <ng-container *ngIf="employeeMore[project.id] > 0; else noMoreEmployees">
+                                                <div *ngFor="let empImage of imageListLoad[project.id] | slice:0:3"
+                                                    style="position: relative; margin-left: -10px;">
+                                                    <img [src]="'https://localhost:7220/api/Employee/image/' + empImage"
+                                                        style="width: 30px; height: 30px; border-radius: 100%; margin-right: 0; border: 1px solid rgb(202, 201, 201);" />
+                                                </div>
+                                                <p
+                                                    style="color: rgb(160, 156, 156); font-size: 14px; margin-left: 10px;">
+                                                    And {{employeeMore[project.id] > 3 ? employeeMore[project.id] - 3 : 0}} employee more
+                                                </p>
+                                            </ng-container>
+                                            <ng-template #noMoreEmployees>
+                                                <p style="color: rgb(160, 156, 156); font-size: 14px;">
+                                                    Not have any employees
+                                                </p>
+                                            </ng-template>
+                                        </div>
+                                        <div>
+                                            <button mat-fab extended style="background-color: brown; color: white;"
+                                                (click)="onRemoveEmpFromProject(project)"
+                                            >
+                                                <div
+                                                    style="display: flex; justify-content: center; align-items: center;">
+                                                    Out project <span
+                                                        style="margin-left: 8px; margin-top: 3px;"><mat-icon>close</mat-icon></span>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </ng-container>
+                <ng-template #noProjects>
+                    <p>No projects available.</p>
+                </ng-template>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

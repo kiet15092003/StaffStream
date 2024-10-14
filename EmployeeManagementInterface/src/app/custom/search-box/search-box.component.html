@@ -1,0 +1,7 @@
+<div class="search-bar-container">
+    <button mat-icon-button style="flex-grow: 1;">
+        <mat-icon>search</mat-icon>
+    </button>
+    <input [(ngModel)]="searchTerm" placeholder="Search here" style="flex-grow: 10;"/>
+    <button mat-flat-button class="custom-flat-button" style="flex-grow: 1;" (click)="onSearch()">Search</button>
+</div>

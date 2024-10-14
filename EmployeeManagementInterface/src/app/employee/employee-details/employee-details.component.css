@@ -1,0 +1,36 @@
+td,
+th {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+.mat-sort-header-container {
+    justify-content: center !important;
+}
+.mat-elevation-z5 {
+    border-radius: 10px;
+    /* Adjust the radius as needed */
+    overflow: hidden;
+    /* Ensure content does not overflow rounded corners */
+}
+
+th.mat-header-cell {
+    text-align: center !important;
+}
+
+.menu-item-content {
+    display: flex;
+    align-items: center;
+}
+
+.menu-item-content mat-icon {
+    font-size: 24px; /* Adjust icon size if needed */
+}
+
+.menu-item-content span {
+    font-size: 14px; /* Adjust text size if needed */
+}
+
+a{
+    text-decoration: none;
+}

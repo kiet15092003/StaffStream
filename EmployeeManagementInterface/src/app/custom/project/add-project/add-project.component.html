@@ -1,0 +1,98 @@
+<div style="padding: 10px;">
+    <mat-dialog-content style="max-width: 100%;">
+        <form [name]="projectInfo" [formGroup]="projectInfo">
+            <div style="display: flex;">
+                <div style="flex-grow: 4;">
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div style="position: relative; width: 100%; ">
+                            <img *ngIf="imageUrl" [src]="imageUrl" alt="Image preview"
+                                style="width: 100%; height: auto; border-radius: 20px;" />
+                            <button mat-icon-button
+                                style="position: absolute; top: 8px; right: 8px; background-color: white;"
+                                (click)="triggerFileUpload()">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <input type="file" id="fileUpload" (change)="onImageChange($event)"
+                                style="display: none;" #fileInput />
+                        </div>
+                    </div>
+                </div>
+                <div style="flex-grow: 8; display: flex; flex-direction: column; margin-left: 30px;">
+                    <div style="width: 100%; margin-bottom: 10px;">
+                        <mat-form-field style="width: 550px;">
+                            <input type="text" matInput formControlName="projectName"
+                                placeholder="Project name" />
+                            <mat-error *ngIf="projectInfo.get('projectName')!.hasError('required')">
+                                Please enter project name
+                            </mat-error>
+                            <mat-error *ngIf="projectInfo.get('projectName')!.hasError('pattern')">
+                                Invalid project name
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div style="width: 100%; margin-bottom: 10px;">
+                        <mat-form-field style="width: 550px;">
+                            <textarea type="text" matInput formControlName="description"
+                                placeholder="Description"></textarea>
+                            <mat-error *ngIf="projectInfo.get('description')!.hasError('required')">
+                                Please enter description
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div style="width: 100%; margin-bottom: 10px;">
+                        <mat-form-field style="width: 550px;">
+                            <mat-label>Start Date</mat-label>
+                            <input matInput [matDatepicker]="pickerStartDate" formControlName="startDate">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix
+                                [for]="pickerStartDate"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerStartDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div style="width: 100%; margin-bottom: 10px;">
+                        <mat-form-field style="width: 550px;">
+                            <mat-label>End Date</mat-label>
+                            <input matInput [matDatepicker]="pickerEndDate" formControlName="endDate">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix
+                                [for]="pickerEndDate"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerEndDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div style="width: 100%; margin-bottom: 10px;">
+                        <form>
+                            <mat-form-field class="example-chip-list" style="width: 550px;">
+                                <mat-label>Enter tech types</mat-label>
+                                <mat-chip-grid #chipGrid aria-label="techType selection">
+                                    @for (techType of techTypes(); track $index) {
+                                    <mat-chip-row (removed)="remove(techType)">
+                                        {{techType}}
+                                        <button matChipRemove [attr.aria-label]="'remove ' + techType">
+                                            <mat-icon>cancel</mat-icon>
+                                        </button>
+                                    </mat-chip-row>
+                                    }
+                                </mat-chip-grid>
+                                <input name="currenttechType" placeholder="New tech type..." #techTypeInput
+                                    [(ngModel)]="currenttechType" [matChipInputFor]="chipGrid"
+                                    [matAutocomplete]="auto"
+                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                    (matChipInputTokenEnd)="add($event)" />
+                                <mat-autocomplete #auto="matAutocomplete"
+                                    (optionSelected)="selected($event)">
+                                    @for (techType of filteredtechTypes(); track techType) {
+                                    <mat-option [value]="techType">{{techType}}</mat-option>
+                                    }
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button (click)="onNoClick()">No Thanks</button>
+        <button mat-button [disabled]="!projectInfo.valid" (click)="onOkClick()">Ok</button>
+    </mat-dialog-actions>
+</div>

@@ -1,0 +1,167 @@
+<mat-stepper #stepper>
+    <mat-step [stepControl]="firstFormGroup" style="overflow-y: scroll;">
+        <form [formGroup]="firstFormGroup">
+            <ng-template matStepLabel>Select project</ng-template>
+            <div class="projects-container">
+                <ng-container *ngIf="listAllProject.length; else noProjects">
+                    <mat-card *ngFor="let project of listAllProject" appearance="outlined" class="project-item">
+                        <div style="display: flex;">
+                            <div>
+                                <img
+                                style="border-radius: 10px; width: 400px; height: auto;"
+                                [src]="'https://localhost:7220/api/Project/image/' + project.image" />
+                            </div>
+                            <div style="margin-left: 20px; display: flex; flex-direction: column; justify-content: space-between;"> 
+                                    <div>
+                                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                            <div style="max-width: 60%;">
+                                                <p style="font-weight: bold; font-size: 24px;" class="project-name">{{ project.projectName }}</p>
+                                            </div>
+                                            <div>
+                                                <button mat-raised-button>
+                                                    <mat-icon>calendar_today</mat-icon>
+                                                    {{ project.startDate | date }}
+                                                </button>
+                                            </div>
+                                        </div>                    
+                                        <div class="project-tech" style="display: flex; margin-bottom: 10px;">
+                                            <span *ngFor="let tech of project.listTech; let i = index">
+                                                <div style="background: rgb(27, 130, 203); color: white; padding: 8px;
+                                                    margin-right: 10px; border-radius: 5px;">
+                                                    {{ tech }}
+                                                </div>                                 
+                                            </span>
+                                        </div>
+                                        <p class="project-description">{{ project.description }}</p>
+                                        <div style="display: flex; align-items: center; margin-left: 10px;">
+                                            <ng-container *ngIf="employeeMore[project.id] > 0; else noMoreEmployees">
+                                              <div *ngFor="let empImage of imageListLoad[project.id] | slice:0:3" 
+                                                   style="position: relative; margin-left: -10px;">
+                                                <img [src]="'https://localhost:7220/api/Employee/image/' + empImage" 
+                                                     style="width: 30px; height: 30px; border-radius: 100%; margin-right: 0; border: 1px solid rgb(202, 201, 201);" />
+                                              </div>
+                                              <p style="color: rgb(160, 156, 156); font-size: 14px; margin-left: 10px;"> 
+                                                And {{employeeMore[project.id] > 3 ? employeeMore[project.id] - 3 : 0}} employee more 
+                                              </p>
+                                            </ng-container>
+                                            <ng-template #noMoreEmployees>
+                                                <p style="color: rgb(160, 156, 156); font-size: 14px;">
+                                                    Not have any employees
+                                                </p>
+                                              </ng-template>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <div class="project-employee-image" style="flex-grow: 6;">
+                                            </div>
+                                            <div style="flex-grow: 6; display: flex; justify-content: flex-end;">
+                                                <button mat-fab extended
+                                                (click)="onClickChooseProject(project.id)"
+                                                matStepperNext
+                                                >
+                                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                                        Choose <span style="margin-left: 8px; margin-top: 3px;"><mat-icon>arrow_forward</mat-icon></span>
+                                                    </div>                                                   
+                                                  </button>                                         
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                                
+                            </div>
+                        </div>                   
+                    </mat-card>
+                </ng-container>
+                <ng-template #noProjects>
+                    <p>No projects available.</p>
+                </ng-template>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" label="Edit role and assignment date">
+        <form [formGroup]="secondFormGroup">
+            <div style="display: flex; margin-top: 10px;">
+                <ng-container *ngIf="projectChoosed.id!==0; else noProjectChoosed">
+                    <div style="width: 420px;">
+                        <mat-card>
+                            <img mat-card-image [src]="'https://localhost:7220/api/Project/image/' + projectChoosed.image"
+                                style="width: 95%; height: auto; margin-top: 10px; margin-left: 10px; margin-right: 10px; border-radius: 10px;">
+                            <mat-card-header>
+                                <div style="display: flex; width: 100%; justify-content: space-between; align-items: center;">
+                                    <mat-card-title>{{ projectChoosed.projectName }}</mat-card-title>                      
+                                </div>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <div class="project-tech" style="display: flex; margin-bottom: 10px; margin-top: 10px;">
+                                    <span *ngFor="let tech of projectChoosed.listTech; let i = index">
+                                        <div style="background: rgb(27, 130, 203); color: white; padding: 8px;
+                                            margin-right: 10px; border-radius: 5px;">
+                                            {{ tech }}
+                                        </div>                                 
+                                    </span>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </ng-container>
+                <ng-template #noProjectChoosed>
+                    <p>No project choosed</p>
+                </ng-template> 
+                    <mat-card style="margin-left: 30px; max-height: 430px; overflow-y: scroll;">
+                        <mat-card-content>
+                          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"
+                            style="max-height: 400px; overflow-y: scroll;">
+                            <ng-container matColumnDef="name">
+                              <th mat-header-cell *matHeaderCellDef>Name</th>
+                              <td mat-cell *matCellDef="let element">
+                                <p>{{ element.emp.firstName }} {{element.emp.lastName}}</p>
+                              </td>
+                            </ng-container>
+                            <ng-container matColumnDef="role">
+                              <th mat-header-cell *matHeaderCellDef>Role</th>
+                              <td mat-cell *matCellDef="let element; let i = index">
+                                <mat-form-field appearance="outline" style="margin-top: 20px;">
+                                    <mat-label>Role</mat-label>
+                                    <input matInput [formControlName]="'role_' + i">
+                                    <mat-error *ngIf="secondFormGroup.get('role_' + i)?.hasError('required')">
+                                        Role is required
+                                    </mat-error>
+                                    <mat-error *ngIf="secondFormGroup.get('role_' + i)?.hasError('pattern')">
+                                        Invalid role
+                                    </mat-error>
+                                </mat-form-field>
+                              </td>
+                            </ng-container>                   
+                            <ng-container matColumnDef="assignmentDate">
+                              <th mat-header-cell *matHeaderCellDef>Assignment Date</th>
+                              <td mat-cell *matCellDef="let element; let i = index">
+                                <mat-form-field appearance="outline" style="margin-top: 20px;">
+                                  <mat-label>Assignment Date</mat-label>
+                                  <input matInput [formControlName]="'assignmentDate_' + i" [matDatepicker]="picker">
+                                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                              </td>
+                            </ng-container>                     
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                          </table>
+                        </mat-card-content>
+                    </mat-card>  
+            </div>
+            <div style="margin-top: 10px;">
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext (click)="submitFormValues()">Next</button>
+            </div>
+        </form>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        <p>Checking add employees choosed to project</p>
+        <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button (click)="onDoneClick()">Done</button>
+        </div>
+    </mat-step>
+</mat-stepper>

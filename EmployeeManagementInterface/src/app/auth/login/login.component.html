@@ -1,0 +1,80 @@
+<div style="
+    width: 100%; 
+    height: 100vh; 
+    position: relative; 
+    overflow: hidden;">
+
+    <!-- Blurred background image -->
+    <div style="
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20231029/pngtree-textured-leaves-with-a-hint-of-blue-image_13714469.png');
+        background-size: cover; 
+        background-position: center; 
+        background-repeat: no-repeat;
+        background-size: 105%;
+        filter: blur(5px); 
+        z-index: 1;">
+    </div>
+
+    <!-- Form content -->
+    <div style="
+        position: relative; 
+        z-index: 2; 
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 30px;
+        border-radius: 10px;
+        width: 350px;
+        margin: auto;
+        top: 50%; 
+        transform: translateY(-50%);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);">
+        
+        <form [name]="loginInfo" [formGroup]="loginInfo">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <mat-form-field style="width: 100%; margin-bottom: 10px;">
+                    <input type="text" matInput formControlName="username" placeholder="Username" />
+                    <mat-error *ngIf="loginInfo.get('username')!.hasError('required')">
+                        <span style="font-weight: bold; font-size: 13px;">Please enter username</span>
+                    </mat-error>
+                    <mat-error *ngIf="loginInfo.get('username')!.hasError('pattern')">
+                        <span style="font-weight: bold; font-size: 13px;">Invalid username</span>
+                    </mat-error>
+                    <mat-error *ngIf="loginInfo.get('username')!.hasError('minlength')">
+                        <span style="font-weight: bold; font-size: 13px;">Invalid username length</span>                      
+                    </mat-error>
+                    <mat-error *ngIf="loginInfo.get('username')!.hasError('maxlength')">
+                        <span style="font-weight: bold; font-size: 13px;">Invalid username length</span>   
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field style="width: 100%; margin-bottom: 10px;">
+                    <input matInput formControlName="password"
+                    placeholder="Password"
+                    [type]="hide() ? 'password' : 'text'" />
+                    <button mat-icon-button matSuffix (click)="clickEvent($event)" 
+                    [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide()">
+                        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error *ngIf="loginInfo.get('password')!.hasError('required')">
+                        <span style="font-weight: bold; font-size: 13px;">Please enter password</span>
+                    </mat-error>
+                    <mat-error *ngIf="loginInfo.get('password')!.hasError('minlength')">
+                        <span style="font-weight: bold; font-size: 13px;">Invalid password length</span>
+                    </mat-error>
+                    <mat-error *ngIf="loginInfo.get('password')!.hasError('maxlength')">
+                        <span style="font-weight: bold; font-size: 13px;">Invalid password length</span>
+                    </mat-error>
+                </mat-form-field>
+                <button mat-flat-button [disabled]="!loginInfo.valid"
+                    style="border-radius: 10px; width: 100%; color: white;"
+                    (click)="onSubmitFormLogin()">
+                    Login
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

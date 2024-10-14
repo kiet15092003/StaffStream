@@ -1,0 +1,10 @@
+img {
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    margin-top: 10px;
+  }
+  
+  input[type="file"] {
+    display: block;
+    margin-top: 10px;
+  }

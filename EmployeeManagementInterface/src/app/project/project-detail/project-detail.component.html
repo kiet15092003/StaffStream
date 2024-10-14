@@ -1,0 +1,114 @@
+<p style="font-size: 24px; font-weight: bold;">Project details</p>
+<div style="display: flex; margin-bottom: 40px;">
+    <div style="flex-grow: 4; max-width: 450px;">
+        <mat-card>
+            <img mat-card-image [src]="'https://localhost:7220/api/Project/image/' + projectDisplay().image"
+                style="width: 100%; height: auto; border-radius: 25px; padding: 15px">
+            <mat-card-header style="padding-top: 0 !important;">
+                <div style="display: flex; width: 100%; justify-content: space-between; align-items: center;">
+                    <div style="display: flex;flex-direction: column;">
+                        <mat-card-title>{{ projectDisplay().projectName }}</mat-card-title>
+                        <div class="project-tech" style="display: flex; margin-bottom: 10px; margin-top: 10px;">
+                            <span *ngFor="let tech of projectDisplay().listTech; let i = index">
+                                <div style="background: rgb(27, 130, 203); color: white; padding: 8px;
+                                    margin-right: 10px; border-radius: 5px;">
+                                    {{ tech }}
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <div style="display: flex;flex-direction: column; margin-bottom: 10px;">
+                        <button mat-raised-button style="margin-bottom: 10px;">
+                            <mat-icon>edit</mat-icon>
+                            Edit
+                        </button>
+                        <button mat-raised-button color="warn">
+                            <mat-icon>delete</mat-icon>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </mat-card-header>
+            <mat-card-content>
+                <p>{{ projectDisplay().description }}</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    <div style="flex-grow: 8;">
+        <form [formGroup]="empListFormGroup">
+            <mat-card style="margin-left: 30px; max-height: 800px; overflow-y: scroll;">
+                <mat-card-content>
+                    <p style="font-size: 24px; font-weight: bold;">Project's employees</p>
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <app-search-box (search)="onRecieveSearchStr($event)" style="flex-grow: 5;"></app-search-box>
+                        <button mat-flat-button style="border-radius: 10px; height: 50px; margin-left: 10px;">
+                            Add employee
+                        </button>
+                        <button mat-flat-button style="border-radius: 10px; height: 50px; margin-left: 10px;"
+                            [disabled]="isButtonAcceptDisabled()" (click)="onAcceptChange()">
+                            Accept change
+                        </button>
+                    </div>
+                    <ng-container *ngIf="dataSource.data.length > 0 else noData">
+                        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8"
+                            style="max-height: 400px; overflow-y: scroll;">
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef>Name</th>
+                                <td mat-cell *matCellDef="let element">
+                                    <p>{{ element.emp.firstName }} {{element.emp.lastName}}</p>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="role">
+                                <th mat-header-cell *matHeaderCellDef>Role</th>
+                                <td mat-cell *matCellDef="let element; let i = index">
+                                    <mat-form-field appearance="outline" style="margin-top: 20px;">
+                                        <mat-label>Role</mat-label>
+                                        <input matInput [formControlName]="'role_' + i" [readonly]="!element.editMode">
+                                        <mat-error *ngIf="empListFormGroup.get('role_' + i)?.hasError('required')">
+                                            Role is required
+                                        </mat-error>
+                                        <mat-error *ngIf="empListFormGroup.get('role_' + i)?.hasError('pattern')">
+                                            Invalid role
+                                        </mat-error>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="assignmentDate">
+                                <th mat-header-cell *matHeaderCellDef>Assignment Date</th>
+                                <td mat-cell *matCellDef="let element; let i = index">
+                                    <mat-form-field appearance="outline" style="margin-top: 20px;">
+                                        <mat-label>Assignment Date</mat-label>
+                                        <input matInput [formControlName]="'assignmentDate_' + i"
+                                            [matDatepicker]="picker" [disabled]="!element.editMode"
+                                            [readonly]="!element.editMode">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"
+                                            [disabled]="!element.editMode"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="task">
+                                <th mat-header-cell *matHeaderCellDef></th>
+                                <td mat-cell *matCellDef="let element">
+                                    <div style="display: flex;">
+                                        <button mat-icon-button (click)="toggleEditMode(element)">
+                                            <mat-icon>{{ element.editMode ? 'save' : 'edit' }}</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="warn" (click)="onDeleteEmp(element)">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </div>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </ng-container>
+                    <ng-template #noData>
+                        <p> Not have any employee </p>
+                    </ng-template>
+                </mat-card-content>
+            </mat-card>
+        </form>
+    </div>
+</div>

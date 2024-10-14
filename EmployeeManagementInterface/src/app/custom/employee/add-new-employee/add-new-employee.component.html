@@ -1,0 +1,119 @@
+<h2 mat-dialog-title style="text-align: center;">Add new employee</h2>
+<mat-dialog-content  style="max-width: 100%;">
+    <form [name]="empInfo" [formGroup]="empInfo">
+        <div style="display: flex;">
+            <div style="flex-grow: 4; display: flex; flex-direction: column; align-items: center;">
+                <div *ngIf="imageUrl" style="text-align: center;">
+                    <img [src]="imageUrl" alt="Image preview" style="width: 150px; height: 150px; object-fit: contain;" />
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center; margin-top: 16px; margin-bottom: 20px;">
+                    <input type="file" id="fileUpload" (change)="onImageChange($event)" style="display: none;" />             
+                    <label for="fileUpload" style="cursor: pointer; background-color: rgb(61, 125, 220); color: white; padding: 10px 20px; border-radius: 4px; font-size: 16px;">
+                        Upload avatar
+                    </label>
+                </div>
+                <div style="margin-left: 30px;">
+                    <mat-form-field style="margin-right: 32px;">
+                        <input type="text" matInput formControlName="firstName" placeholder="First name" />
+                        <mat-error *ngIf="empInfo.get('firstName')!.hasError('required')">
+                            Please enter first name
+                        </mat-error>
+                        <mat-error *ngIf="empInfo.get('firstName')!.hasError('pattern')">
+                            Invalid first name
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>  
+            <div style="flex-grow: 8;">
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <div>
+                        <mat-form-field>
+                            <input type="text" matInput formControlName="lastName" placeholder="Last name" />
+                            <mat-error *ngIf="empInfo.get('lastName')!.hasError('required')">
+                                Please enter last name
+                            </mat-error>
+                            <mat-error *ngIf="empInfo.get('lastName')!.hasError('pattern')">
+                                Invalid last name
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field style="margin-left: 32px;">
+                            <mat-label>Department</mat-label>
+                            <mat-select formControlName="department">
+                                @for (department of departments; track department) {
+                                <mat-option [value]=department.id>{{department.departmentName}}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center; margin-top: 16px;">
+                    <div>
+                        <mat-form-field style="margin-right: 32px;">
+                            <input type="text" matInput formControlName="email" placeholder="Email" />
+                            <mat-error *ngIf="empInfo.get('email')!.hasError('required')">
+                                Please enter email
+                            </mat-error>
+                            <mat-error *ngIf="empInfo.get('email')!.hasError('pattern')">
+                                Invalid email
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field style="max-width: 210px;">
+                            <input matInput formControlName="salary" placeholder="Salary"  type="number" />
+                            <span matTextPrefix>$&nbsp;</span>
+                            <span matTextSuffix>.00</span>
+                            <mat-error *ngIf="empInfo.get('salary')!.hasError('required')">
+                                Please enter salary
+                            </mat-error>
+                            <mat-error *ngIf="empInfo.get('salary')!.hasError('pattern')">
+                                Invalid salary
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center; margin-top: 16px;">
+                    <mat-form-field style="width: 210px;">
+                        <mat-label>Hire Date</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="hireDate">
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field style="margin-left: 32px;">
+                        <mat-label>Designation</mat-label>
+                        <mat-select formControlName="designation">
+                            @for (designation of designations; track designation) {
+                            <mat-option [value]=designation.id>{{designation.designationName}}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <mat-card appearance="outlined" style="margin: 20px;">
+                    <mat-card-content>
+                        <span> Gender: </span>
+                        <mat-radio-group aria-label="Gender" formControlName="gender">
+                            <mat-radio-button value="male">Male</mat-radio-button>
+                            <mat-radio-button value="female">Female</mat-radio-button>
+                        </mat-radio-group>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card appearance="outlined" style="margin: 20px;">
+                    <mat-card-content>
+                        <span> Married: </span>
+                        <mat-radio-group aria-label="isMarried" formControlName="isMarried">
+                            <mat-radio-button value='1'>Is Married</mat-radio-button>
+                            <mat-radio-button value='0'>Not Married</mat-radio-button>
+                        </mat-radio-group>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">No Thanks</button>
+    <button mat-button [disabled]="!empInfo.valid" (click)="onOkClick()">Ok</button>
+</mat-dialog-actions>

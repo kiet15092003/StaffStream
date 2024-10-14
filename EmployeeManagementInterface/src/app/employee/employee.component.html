@@ -1,0 +1,30 @@
+<div>
+    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
+        <app-search-box (search)="onRecieveSearchStr($event)" style="flex-grow: 5;"></app-search-box>
+        <button mat-flat-button class="custom-button" style="flex-grow: 2;"
+        (click)="onOpenAddNewEmployeeDialog()"
+        > Add new employee </button>
+        <button mat-flat-button  class="custom-button" style="flex-grow: 2;" 
+            [disabled]="numOfEmps() === 0"
+            [color]="numOfEmps() > 0 ? 'warn' : ''"
+            (click)="onClickButtonMultiDelete()"
+        > Delete employee </button>
+        <button mat-flat-button  class="custom-button" style="flex-grow: 2;" 
+            [disabled]="numOfEmps() === 0"
+            [color]="numOfEmps() > 0 ? 'accent' : ''"
+            (click)="onOpenAddToProjectDialog()"
+        > Add to project </button>
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" class="custom-toggle"
+        [(value)]="selectedValue">
+            <mat-button-toggle value="all"
+            (click)="onChangeToggle(selectedValue)">All</mat-button-toggle>
+            <mat-button-toggle value="month" 
+            (click)="onChangeToggle(selectedValue)">This month</mat-button-toggle>
+            <mat-button-toggle value="year" 
+            (click)="onChangeToggle(selectedValue)">This year</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>   
+    <app-employee-details [searchStr]="searchStr" 
+    [confirmDelete]="confirmDelete"
+    (empsSelectedArr)="onRecieveNumOfEmps($event)" ></app-employee-details>
+</div>

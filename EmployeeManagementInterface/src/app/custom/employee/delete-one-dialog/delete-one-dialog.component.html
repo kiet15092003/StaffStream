@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Delete Employee</h2>
+<mat-dialog-content>
+    <p>Confirm delete 
+        <span style="font-size: 1.2rem; font-weight: bold;">{{data.employee.firstName}}</span> 
+    </p>
+    <p> The employee can take part in some projects </p>
+    <p> Please carefully when delete employee because this task can not be undo </p>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">No Thanks</button>
+    <button mat-button (click)="onOkClick()">Ok</button>
+</mat-dialog-actions>

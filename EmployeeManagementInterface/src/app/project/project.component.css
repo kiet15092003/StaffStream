@@ -1,0 +1,12 @@
+.menu-item-content {
+    display: flex;
+    align-items: center;
+}
+
+.menu-item-content mat-icon {
+    font-size: 24px; /* Adjust icon size if needed */
+}
+
+.menu-item-content span {
+    font-size: 14px; /* Adjust text size if needed */
+}
